@@ -1,10 +1,12 @@
 import java.util.Scanner;
 public class AccountCalc{
 
-    String goods;
+    String goods = new String();
     int goodsCount = 0;
     double account;
     int countPeople;
+
+    Scanner scanner;
     //функция вывода текстовых итогов
     public void showAccount(){
 
@@ -40,18 +42,16 @@ public class AccountCalc{
     }
     //функция получения товаров
     public void addGoods(){
-        Scanner scanner = new Scanner(System.in);
-
         String goodsName, goodsCost;
 
         System.out.println("Введите название товара");
-        goodsName = scanner.next();
+        goodsName = scanner.nextLine();
 
         while (true){
             try {
                 int idx;
                 System.out.println("Введите цену за товар в формате \"рубли.копейки\"");
-                goodsCost = scanner.next();
+                goodsCost = scanner.nextLine();
 
                 idx = goodsCost.indexOf(".");
                 if ((goodsCost.length() - idx - 3 <= 1 //проверяем кол-во знаков после точки, копейки могут быть в десятичных, отсюда и 1
@@ -76,7 +76,6 @@ public class AccountCalc{
             }
             catch (Exception e) {
                 System.out.println("Введено некоректное значение цены товара");
-                scanner.nextLine();
             }
         }
 
@@ -86,7 +85,6 @@ public class AccountCalc{
     //функция получения кол-ва человек для деления
     public void getPeopleCount(){
 
-        Scanner scanner = new Scanner(System.in);
         int getValue;
         while (true)
         {
@@ -100,12 +98,13 @@ public class AccountCalc{
                 }
                 else {
                     countPeople = getValue;
+                    scanner.nextLine();
                     break;
                 }
             }
             catch(Exception e) {
                 System.out.println("Введено некоректное значение, значение людей должно быть целым и больше 1");
-                scanner.nextLine(); //высвобождает значение в считывании
+                scanner.nextLine();//не оставляем следов от излишнего ввода
             }
         }
 
@@ -113,17 +112,16 @@ public class AccountCalc{
     // главная функция, получает кол-во людей, запрашивает товары, и выводит итог
     public void getGoods(){
 
+        scanner = new Scanner(System.in);
         getPeopleCount();
-
-        Scanner scanner = new Scanner(System.in);
 
         String str;
 
         while(true){
 
             System.out.println("Введите любой символ, чтобы добавить товар");
-            System.out.println("Или введите \"Заверишить\" чтобы закончить ввод товаров ");
-            str = scanner.next();
+            System.out.println("Или введите \"Завершить\" чтобы закончить ввод товаров ");
+            str = scanner.nextLine();
             if (str.equalsIgnoreCase("завершить")){
                 showAccount();
                 break;
