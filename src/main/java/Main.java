@@ -3,20 +3,42 @@ public class Main {
 
     public static class AccountCalc{
 
-        String goods = "Добавленные товары:";
+        String goods;
         int goodsCount = 0;
         double account;
         int countPeople;
 
         public void showAccount(){
+
+            String roubleText;
             if (goodsCount == 0){
                 System.out.println("Товары не были добавлены");
                 return;
             }
+            double result = account/countPeople;
+            int preResult = (int)Math.floor(account/countPeople); //switch не работает c double....
 
-            System.out.println(goods);
-            System.out.println(account);
-            System.out.println(countPeople);
+            switch (preResult%10){
+                case 1:
+                        roubleText = "рубль";
+                        break;
+                case 2:
+                case 3:
+                case 4:
+                        roubleText = "рубля";
+                        break;
+                case 5:
+                case 6:
+                case 7:
+                case 8:
+                case 9:
+                case 0:
+                default:
+                    roubleText = "рублей";
+                    break;
+            }
+            System.out.println("Добавленные товары:" + "\n" + goods);
+            System.out.println(String.format("Каждый человек заплатит %.2f %s",result,roubleText));
         }
         public void addGoods(){
             Scanner scanner = new Scanner(System.in);
@@ -25,17 +47,33 @@ public class Main {
 
             System.out.println("Введите название товара");
             goodsName = scanner.next();
-            goods += "\n" + goodsName;
+
             while (true){
                 try {
+                    int idx;
                     System.out.println("Введите цену за товар в формате \"рубли.копейки\"");
                     goodsCost = scanner.next();
 
+                    idx = goodsCost.indexOf(".");
+                    if ((goodsCost.length() - idx - 3 <= 1 //проверяем кол-во знаков после точки, копейки могут быть в десятичных, отсюда и 1
+                        || idx == -1) // или у нас целое значение
+                        ) // цена может быть только положительной
+                    {
+                        double parsedCost = Double.parseDouble(goodsCost);
+                        if (parsedCost > 0) {
 
-
-                    account += Double.parseDouble(goodsCost);
-                    goodsCount++;
-                    break; //выходим как только получили корректное значение
+                            goods += goodsName + "\n";
+                            account += parsedCost;
+                            goodsCount++;
+                            break; //выходим как только получили корректное значение
+                        }
+                        else {
+                            System.out.println("Введено отрицательное значение цены товара");
+                        }
+                    }
+                    else{
+                        System.out.println("Введено некоректное значение цены товара");
+                    }
                 }
                 catch (Exception e) {
                     System.out.println("Введено некоректное значение цены товара");
